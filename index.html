@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Gerakan Kapal & Pembayaran</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="background">
+      <div class="background__grid"></div>
+      <div class="background__glow"></div>
+      <div class="background__waves"></div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="badge">Pelabuhan</span>
+        <h1>Dashboard Operasional Pelabuhan Cilegon Mandiri</h1>
+        <p>Monitoring ringkas harian dan tren bulanan untuk Kantor Utara & Selatan.</p>
+      </div>
+      <div class="filters">
+        <label class="filter">
+          <span>Periode Bulan</span>
+          <select id="monthSelect">
+            <option value="2026-02">Februari 2026</option>
+          </select>
+        </label>
+        <label class="filter">
+          <span>Tanggal</span>
+          <input id="dateSelect" type="date" value="2026-02-03" min="2026-02-01" max="2026-02-28" />
+        </label>
+      </div>
+    </header>
+
+    <main>
+      <section class="kpis">
+        <article class="card kpi-card">
+          <div>
+            <p class="kpi-label">Total Gerakan Kapal Hari Ini</p>
+            <h2 id="kpiTotal" class="kpi-value">0</h2>
+          </div>
+          <p class="kpi-meta" id="kpiTotalMeta">Gabungan Utara + Selatan</p>
+        </article>
+        <article class="card kpi-card">
+          <div>
+            <p class="kpi-label">Transaksi Rupiah Hari Ini</p>
+            <h2 id="kpiIdr" class="kpi-value">0</h2>
+          </div>
+          <p class="kpi-meta">Jumlah transaksi IDR (gabungan)</p>
+        </article>
+        <article class="card kpi-card">
+          <div>
+            <p class="kpi-label">Transaksi Dollar Hari Ini</p>
+            <h2 id="kpiUsd" class="kpi-value">0</h2>
+          </div>
+          <p class="kpi-meta">Jumlah transaksi USD (gabungan)</p>
+        </article>
+      </section>
+
+      <section class="charts">
+        <article class="card chart-card chart-card--wide">
+          <header class="card-head">
+            <div>
+              <h3>Tren Gerakan Kapal Bulanan</h3>
+              <p>Dua garis: Kantor Utara vs Kantor Selatan</p>
+            </div>
+            <span class="chip">Gerakan</span>
+          </header>
+          <div class="chart">
+            <canvas id="chartTotal"></canvas>
+          </div>
+        </article>
+
+        <article class="card chart-card">
+          <header class="card-head">
+            <div>
+              <h3>Tren Transaksi Rupiah Bulanan</h3>
+              <p>Jumlah transaksi IDR per kantor</p>
+            </div>
+            <span class="chip">IDR</span>
+          </header>
+          <div class="chart">
+            <canvas id="chartIdr"></canvas>
+          </div>
+        </article>
+
+        <article class="card chart-card">
+          <header class="card-head">
+            <div>
+              <h3>Tren Transaksi Dollar Bulanan</h3>
+              <p>Jumlah transaksi USD per kantor</p>
+            </div>
+            <span class="chip chip--accent">USD</span>
+          </header>
+          <div class="chart">
+            <canvas id="chartUsd"></canvas>
+          </div>
+        </article>
+
+        <article class="card chart-card chart-card--wide">
+          <header class="card-head">
+            <div>
+              <h3>Rekap Harian Gerakan per Kantor</h3>
+              <p>Stacked bar untuk melihat total dan kontribusi harian</p>
+            </div>
+            <span class="chip">Harian</span>
+          </header>
+          <div class="chart chart--tall">
+            <canvas id="chartDailyStacked"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <section class="recap">
+        <article class="card summary-card">
+          <header class="card-head">
+            <div>
+              <h3>Rekap Bulan Ini</h3>
+              <p>Ringkasan agregat untuk manajer</p>
+            </div>
+          </header>
+          <dl class="summary-list" id="summaryList"></dl>
+        </article>
+        <article class="card split-card">
+          <header class="card-head">
+            <div>
+              <h3>Proporsi Gerakan</h3>
+              <p>Kontribusi Kantor Utara vs Selatan</p>
+            </div>
+          </header>
+          <div class="split-bar">
+            <div class="split-bar__track">
+              <span id="splitUtara" class="split-bar__fill split-bar__fill--utara"></span>
+              <span id="splitSelatan" class="split-bar__fill split-bar__fill--selatan"></span>
+            </div>
+            <div class="split-bar__legend">
+              <div>
+                <span class="dot dot--utara"></span>
+                <span>Utara</span>
+                <strong id="splitUtaraValue">0%</strong>
+              </div>
+              <div>
+                <span class="dot dot--selatan"></span>
+                <span>Selatan</span>
+                <strong id="splitSelatanValue">0%</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="card chart-card chart-card--compact">
+          <header class="card-head">
+            <div>
+              <h3>Komposisi Transaksi Bulan Ini</h3>
+              <p>Proporsi IDR vs USD (gabungan)</p>
+            </div>
+            <span class="chip chip--accent">IDR / USD</span>
+          </header>
+          <div class="chart chart--compact">
+            <canvas id="chartCurrency"></canvas>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footnote">
+      Data di halaman ini adalah contoh (dummy) untuk simulasi tampilan sebelum API tersedia.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
